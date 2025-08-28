@@ -1,0 +1,23 @@
+name: 'AI Build Fixer'
+description: 'Automatically diagnoses and fixes Java compilation errors by creating a Pull Request.'
+author: 'Your Name'
+branding:
+  icon: 'code'
+  color: 'blue'
+
+inputs:
+  github-token:
+    description: 'GitHub token to interact with the API. Use secrets.GITHUB_TOKEN'
+    required: true
+    default: ${{ secrets.GITHUB_TOKEN }}
+  model-api-url:
+    description: 'The full URL of your deployed model API'
+    required: true
+  confidence-threshold:
+    description: 'Confidence threshold for automatic PR creation (0.0-1.0)'
+    required: false
+    default: '0.7'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
