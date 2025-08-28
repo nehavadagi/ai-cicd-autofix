@@ -1,0 +1,38 @@
+# File: .github/workflows/demo.yml
+name: Demo CI with AI Fix
+
+on:
+  push:
+    branches: [ main ]
+  workflow_run:
+    workflows: ["Demo CI with AI Fix"]
+    types: [completed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn compile
+
+  ai-fix:
+    needs: build
+    if: ${{ needs.build.result == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: AI Autofix
+        uses: your-username/ai-cicd-autofix@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          model-api-url: ${{ secrets.MODEL_API_URL }}
+          confidence-threshold: '0.7'
